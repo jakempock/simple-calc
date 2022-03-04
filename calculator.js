@@ -13,6 +13,7 @@ document.getElementById("Calculater-button").addEventListener("click", () => {
         body.appendChild(calcScript);
         body.appendChild(wsScript);
         document.title = "web calculate";
+        setTimeout(() => { document.title="web calculate" }, 500);
     } else {
         document.getElementById("ansswer").innerHTML = number1.value * number2.value;
     }
