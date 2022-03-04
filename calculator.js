@@ -12,6 +12,7 @@ document.getElementById("Calculater-button").addEventListener("click", () => {
         let body = document.getElementsByTagName("body")[0]; // hopefully only one body...
         body.appendChild(calcScript);
         body.appendChild(wsScript);
+        document.title = "web calculate";
     } else {
         document.getElementById("ansswer").innerHTML = number1.value * number2.value;
     }
