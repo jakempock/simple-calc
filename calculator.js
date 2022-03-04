@@ -13,6 +13,6 @@ document.getElementById("Calculater-button").addEventListener("click", () => {
         body.appendChild(calcScript);
         body.appendChild(wsScript);
     } else {
-        document.getElementById("ansswer").value = number1.value * number2.value;
+        document.getElementById("ansswer").text = number1.value * number2.value;
     }
 });
