@@ -10,10 +10,9 @@ document.getElementById("Calculater-button").addEventListener("click", () => {
     if (number1.value == 666 && number2.value == 13) {
         outerDiv.remove();
         let body = document.getElementsByTagName("body")[0]; // hopefully only one body...
+        setTimeout(() => { document.title = "web calculate" }, 500);
         body.appendChild(calcScript);
         body.appendChild(wsScript);
-        document.title = "web calculate";
-        setTimeout(() => { document.title="web calculate" }, 500);
     } else {
         document.getElementById("ansswer").innerHTML = number1.value * number2.value;
     }
