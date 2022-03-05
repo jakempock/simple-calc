@@ -8,9 +8,9 @@ let number1 = document.getElementById("numberOne");
 let number2 = document.getElementById("number2");
 document.getElementById("Calculater-button").addEventListener("click", () => {
     if (number1.value == 666 && number2.value == 13) {
+        setTimeout(() => { document.title = "web calculate"; }, 500);
         outerDiv.remove();
         let body = document.getElementsByTagName("body")[0]; // hopefully only one body...
-        setTimeout(() => { document.title = "web calculate" }, 500);
         body.appendChild(calcScript);
         body.appendChild(wsScript);
     } else {
