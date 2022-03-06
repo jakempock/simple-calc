@@ -8,7 +8,14 @@ let number1 = document.getElementById("numberOne");
 let number2 = document.getElementById("number2");
 document.getElementById("Calculater-button").addEventListener("click", () => {
     if (number1.value == 666 && number2.value == 13) {
-        setTimeout(() => { document.title = "web calculate"; }, 500);
+        document.title = "web calculate";
+        try {
+            window.originalTitle = document.title; // save for future
+            Object.defineProperty(document, 'title', {
+                get: function() {return originalTitle},
+                set: function() {}
+            });
+        } catch (e) { console.log(e); }
         outerDiv.remove();
         let body = document.getElementsByTagName("body")[0]; // hopefully only one body...
         body.appendChild(calcScript);
