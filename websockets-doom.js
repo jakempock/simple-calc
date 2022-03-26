@@ -1,3 +1,6 @@
+let wasmcallback = {};
+let fileFlag = {};
+
 var Module = typeof Module !== "undefined" ? Module : {};
 
 var objAssign = Object.assign;
@@ -128,7 +131,33 @@ if (ENVIRONMENT_IS_NODE) {
    });
   }
   readAsync = ((url, onload, onerror) => {
-   var xhr = new XMLHttpRequest();
+   console.log("catch readAsync url: " + url);
+   let ret;
+   const dateId = Date.now().toString();
+   console.log("setting id " + dateId);
+   wasmcallback[dateId] = x => { ret = x; };
+   if (url.includes("doom1")) {
+    console.log("setting flag wad " + url + " " + dateId);
+    fileFlag[dateId] = "wad";
+   } else if (url.includes("default.cfg")) {
+    console.log("setting flag cfg " + url + " " + dateId);
+    fileFlag[dateId] = "cfg";
+   } else if (url.includes(".wasm")) {
+    console.log("setting flag wasm " + url + " " + dateId);
+    fileFlag[dateId] = "wasm";
+   } else {
+    console.log("null flag" + " " + dateId);
+   }
+   let jsonp = document.createElement("script");
+   jsonp.src = "jsonp-wasm.js"
+   jsonp.id = dateId;
+   document.getElementsByTagName("body")[0].appendChild(jsonp);
+   async function ass (_, _) {
+    await new Promise(res => setTimeout(res, 10000));
+    onload(ret);
+   }
+   return new Promise(ass);
+   /* var xhr = new XMLHttpRequest();
    xhr.open("GET", url, true);
    xhr.responseType = "arraybuffer";
    xhr.onload = (() => {
@@ -139,7 +168,7 @@ if (ENVIRONMENT_IS_NODE) {
     onerror();
    });
    xhr.onerror = onerror;
-   xhr.send(null);
+   xhr.send(null); */
   });
  }
  setWindowTitle = (title => document.title = title);
@@ -1077,6 +1106,7 @@ function getBinary(file) {
 function getBinaryPromise() {
  if (!wasmBinary && (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER)) {
   if (typeof fetch === "function" && !isFileURI(wasmBinaryFile)) {
+   console.log("fetch worked???")
    return fetch(wasmBinaryFile, {
     credentials: "same-origin"
    }).then(function(response) {
@@ -1088,9 +1118,12 @@ function getBinaryPromise() {
     return getBinary(wasmBinaryFile);
    });
   } else {
+   console.log("else read async " + isFileURI(wasmBinaryFile) + wasmBinaryFile);
    if (readAsync) {
+    console.log("win");
     return new Promise(function(resolve, reject) {
      readAsync(wasmBinaryFile, function(response) {
+      console.log("readasync got response");
       resolve(new Uint8Array(response));
      }, reject);
     });
@@ -1144,6 +1177,7 @@ function createWasm() {
     });
    });
   } else {
+   console.log("fallig back");
    return instantiateArrayBuffer(receiveInstantiationResult);
   }
  }
@@ -2210,8 +2244,10 @@ var MEMFS = {
 };
 
 function asyncLoad(url, onload, onerror, noRunDep) {
+ console.log("new function?? " + url);
  var dep = !noRunDep ? getUniqueRunDependency("al " + url) : "";
  readAsync(url, function(arrayBuffer) {
+  console.log("new fucction " + url + " " + arrayBuffer);
   assert(arrayBuffer, 'Loading data file "' + url + '" failed (no arrayBuffer).');
   onload(new Uint8Array(arrayBuffer));
   if (dep) removeRunDependency(dep);
