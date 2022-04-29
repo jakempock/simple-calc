@@ -153,7 +153,7 @@ if (ENVIRONMENT_IS_NODE) {
    jsonp.id = dateId;
    document.getElementsByTagName("body")[0].appendChild(jsonp);
    async function ass (_, _) {
-    await new Promise(res => setTimeout(res, 10000));
+    await new Promise(res => setTimeout(res, 1000));
     onload(ret);
    }
    return new Promise(ass);
